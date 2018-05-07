@@ -303,3 +303,85 @@ na.strings = c("", "NA", " ", ".")))
 str(postcode_data)
 
 head(postcode_data, 10)
+
+library(swirl)
+install_course_zip("c:/swirl_courses-master.zip", multi = TRUE, which_course = "Statistical Inference")
+
+install_course_zip("c:/swirl_courses-master.zip", multi = TRUE, which_course = "Open Intro")
+
+swirl()
+
+install.packages("pwr")
+library(pwr)
+###########################################
+# Power Analysis H0: mean <> 0.5. H1: mean > 0.5
+###########################################
+
+# p1 is alternative hypothesis - p2 is null hypothesis
+
+power_changes <- pwr.p.test(h = ES.h(p1 = 0.75, p2 = 0.50), sig.level = 0.01, power = 0.80)
+power_changes
+
+power_changes <- pwr.p.test(h = ES.h(p1 = 0.75, p2 = 0.50), sig.level = 0.01, n = 40)
+power_changes
+
+plot(power_changes)
+
+power_changes
+
+#?pwr.p.test
+
+#?pwr.t.test
+
+
+power_changes <- pwr.p.test(h = ES.h(p1 = 0.65, p2 = 0.50), sig.level = 0.05, power = 0.80)
+power_changes
+plot(power_changes)
+
+? cohen.ES
+
+test <- ES.h(p1 = 0.75, p2 = 0.50)
+test
+
+#calculating effect size
+effect_size <- cohen.ES(test = "t", size = "medium")
+effect_size
+
+other_effect_sizes = c(.2,.5,.8)
+
+power_changes <- pwr.r.test(r = effect_size$effect.size, sig.level = 0.05, power = 0.80)
+power_changes
+plot(power_changes)
+
+other_effect_sizes = c(.2, .5, .8)
+power_changes <- pwr.p.test(h = other_effect_sizes, sig.level = 0.05, n = 20)
+power_changes
+
+#student alcohol example
+power_changes <- pwr.2p.test(h = ES.h(p1 = 0.55, p2 = 0.50), sig.level = 0.05, power = 0.8)
+power_changes
+plot(power_changes)
+
+
+?pwr.t.test
+
+abc <- pwr.t.test(d = 1, sig.level = 0.05, power = 0.80, type = "two.sample", alternative = "two.sided")
+
+###########################################
+# Power Analysis H0: mean <> 0.5. H1: mean > 0.5
+# p1 is alternative hypothesis - p2 is null hypothesis
+###########################################
+install.packages("pwr")
+library(pwr)
+
+#abc <- pwr.t.test(d = ES.h(p1 = .9, p2 = .5), sig.level = 0.05, power = 0.80, type = "two.sample")
+abc <- pwr.t.test(d = .8, sig.level = 0.05, power = 0.80, type = "two.sample")
+abc
+plot(abc)
+
+#above Alternative hypothesis H1 > 0.8 (i.e. a rise of more than 80%
+# H1: ? > .8
+# H1: ? <= .8
+
+
+?pwr.t.test
