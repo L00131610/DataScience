@@ -16,7 +16,7 @@ str(sales_data)
 sales_data
 
 ###########################################
-# Calculate Percent function which return the percentage
+# Calculate Percent function which returns the percentage
 # of num1 in comparison to num2
 ###########################################
 calculate_Percent <- function(num1, num2) {
