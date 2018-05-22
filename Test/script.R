@@ -384,4 +384,408 @@ plot(abc)
 # H1: ? <= .8
 
 
-?pwr.t.test
+? pwr.t.test
+
+###########################################
+#dplyr
+###########################################
+
+swirl::install_course()
+
+library(swirl)
+
+data(diamonds, package = "ggplot2")
+dim(diamonds)
+
+dim(head(diamonds, 4))
+
+# do above using pipes
+diamonds %>% head(4) %>% dim
+
+x <- c(0.109, 0.359, 0.63, 0.996, 0.515, 0.142, 0.017, 0.829, 0.907)
+round(exp(diff(log(x))), 1)
+
+# pipes work backwards
+x %>% log %>% diff %>% exp %>% round(1)
+
+#install dplyr()
+
+head(diamonds, 5)
+
+select(diamonds, carat, price)
+
+diamonds %>% select(c(carat, price))
+
+my_attributes <- c('carat', 'price')
+select(diamonds, one_of(my_attributes))
+
+str(diamonds)
+head(diamonds, 5)
+
+slice(diamonds, c(1:5, 8, 15:20))
+
+diamonds %>% slice(c(1:5, 8, 15:20))
+
+set <- select(diamonds, carat, price)
+mutate(set, ratio = price / carat)
+head(ratio, 5)
+
+diamonds %>% select(carat, price) %>% mutate(ratio = price / carat, double = ratio * 2)
+
+summarise(diamonds, AvgPrice = mean(price), MedianPrice = median(price), AvgCarat = mean(carat))
+
+diamonds %>% group_by(cut) %>% summarise(AvgPrice = mean(price))
+
+# arrange() is a sort
+diamonds %>% group_by(cut, color) %>% summarise(AvgPrice = mean(price)) %>% arrange(AvgPrice)
+
+lotto_data = data.frame(read.csv("C:/Users/Owner/Documents/DataScience/Lotto/Lotto/1999.csv", header = TRUE, na.strings = c("", "NA", " ")))
+head(lotto_data, 5)
+
+lotto_data %>% group_by(a)
+
+lotto_data %>% group_by(a, b, c, d, e, f) %>% summarise()
+
+
+#list all the csv files
+csv_file_list <- list.files(path = "C:/Lotto", pattern = "*.csv")
+
+csv_file_list
+
+combine_results <- function(csv_file_list) {
+
+    return_data <- NULL
+
+    for (item in csv_file_list) {
+
+        item <- paste("C:/Lotto/", item, sep = "")
+        my_data <- data.frame(read.csv(item, header = TRUE, stringsAsFactors = FALSE, na.strings = c("", "NA", " ")))
+
+        data_of_interest <- my_data[2:9]
+
+        return_data <- rbind(return_data, data_of_interest)
+    }
+
+    return(return_data)
+}
+
+my_data <- combine_results(csv_file_list)
+
+str(my_data)
+
+nrow(my_data)
+
+tail(my_data, 10)
+
+lotto_data <- my_data
+
+lotto_data %>% summarise(AvgPrice = mean(a))
+lotto_data %>% summarise(AvgPrice = mean(b))
+lotto_data %>% summarise(AvgPrice = mean(c))
+lotto_data %>% summarise(AvgPrice = mean(d))
+
+lotto_data %>% summarise(AvgPrice = mean(e))
+lotto_data %>% summarise(AvgPrice = mean(f))
+lotto_data %>% summarise(AvgBonus = mean(Bonus))
+
+lotto_data %>% group_by(Bonus) %>% summarise(AvgBonus = mean(Bonus)) %>% arrange(AvgBonus)
+
+plot(lotto_data$Bonus)
+
+
+####################################################################
+
+#Install Swirl
+install.packages("hflights")
+
+library(hflights)
+
+head(hflights)
+
+
+########################################################################graf
+
+
+Dose <- c(20, 30, 40, 45, 60)
+DrugA <- c(16, 20, 27, 40, 60)
+DrugB <- c(15, 18, 25, 31, 40)
+
+drugs <- data.frame(Dose, DrugA, DrugB)
+
+plot(drugs)
+
+#type = 0 is blue dot
+
+plot(drugs$Dose, type = "o", col = "blue")
+
+plot(drugs$Dose, type = "b", col = "blue")
+
+# Dose on x, DrugA on y 
+plot(drugs$Dose, drugs$DrugA, type = "b", col = "blue")
+
+#take a snapshot of variable settings
+oldPar <- par(no.readonly = TRUE)
+
+
+plot(Dose, DrugA, type = "b", lty = 2, pch = 17, col = "blue")
+par(new = TRUE)
+plot(Dose, DrugB, type = "b")
+
+par(oldPar)
+
+plot(Dose, DrugA, type = "b", lty = 3, lwd = 3, pch = 15, cex = 2, ylim = c(0, 100))
+title(main = "Drug dosage", col.main = "blue", font.main = 4)
+lines(Dose, DrugB, type = "o", pch = 22, lty = 2, col = "red")
+
+# Start at 0 and get the biggest
+graph_range <- range(0, DrugA, DrugB)
+graph_range
+
+#turn off axes annotation
+plot(DrugA, type = "b", lty = 3, lwd = 3, pch = 15, cex = 2, ylim = graph_range, axes = FALSE, xlab = "Mililitres")
+lines(DrugB, type = "o", pch = 22, lty = 2, col = "red")
+
+#Now cerate a new x axis with ml labels
+axis(1, at = 1:5, lab = c("20 ml", "40 ml", "60 ml", "80 ml", "100 ml"))
+
+axis(2, las = 1, at = 5 * 0:graph_range[2])
+
+box(lty = "solid")
+
+
+#####################################
+# Predicting 
+#####################################
+
+#Install Swirl
+#install.packages("c")
+
+# Load up car library
+library(car)
+
+scatter.smooth(x = cars$speed, y = cars$dist, main = "Dist ~ Speed")
+
+# BoxPlot - Check for outliers
+boxplot(cars$speed)
+boxplot(cars$dist)
+
+
+install.packages("e1071")
+library(e1071)
+
+nrow(cars)
+
+par(mfrow = c(1, 2))
+
+#Regression analysis
+#asscess Skewness
+#If it's a bell curve then it's good for linear regression
+
+plot(density(cars$speed), main = "Density Plot: Speed", ylab = "Frequency",
+    sub = paste("Skewness:", round(e1071::skewness(cars$speed), 2)))
+
+# Fill with red
+polygon(density(cars$speed), col = "red")
+
+plot(density(cars$dist), main = "Density Plot: Distance", ylab = "Frequency",
+    sub = paste("Skewness:", round(e1071::skewness(cars$dist), 2)))
+
+# Fill with red
+polygon(density(cars$dist), col = "red")
+
+# calculate correlatin between speed and distance
+cor(cars$speed, cars$dist)
+# .8 means a positive correlation
+
+#build linear regression model on full data
+linearMod <- lm(dist ~ speed, data = cars)
+print(linearMod)
+
+#model summary
+# note * is a good indicator, after running the summary(linearMod)
+summary(linearMod)
+
+# FOR MODEL COMPARISON, THE MODEL WITH THE LOWEST AIC AND BIC SCORE IS PREFERRED
+# Evaluates goodness of fit fo models 
+AIC(linearMod)
+BIC(linearMod)
+
+# sample 80%
+no_of_records <- sample(1:nrow(cars), 0.8 * nrow(cars))
+
+#model training data
+training_data <- cars[no_of_records,]
+
+# test data
+test_data <- cars[-no_of_records,]
+
+nrow(test_data)
+nrow(training_data)
+
+training_data
+test_data
+
+# Build the model on training data
+lr_model <- lm(dist ~ speed, data = training_data)
+
+summary(lr_model)
+
+# predict distance from testing data
+dist_predicted <- predict(lr_model, test_data)
+dist_predicted
+
+
+# make actual prediction
+actuals_prediction <- data.frame(cbind(actuals = test_data$dist, predicted = dist_predicted))
+head(actuals_prediction)
+
+actuals_prediction
+
+#correlation accuracy
+correlation_accuracy <- cor(actuals_prediction)
+correlation_accuracy
+
+# min max accuracy
+min_max_accuracy <- mean(apply(actuals_prediction, 1, min) / apply(actuals_prediction, 1, max))
+min_max_accuracy
+
+#MAPE
+mape <- mean(abs((actuals_prediction$predicted - actuals_prediction$actuals)) / actuals_prediction$actuals)
+mape
+
+
+#k fold cross validation
+install.packages("DAAG")
+library(DAAG)
+
+cvResults <- suppressWarnings(CVlm(data = cars, form.lm = dist ~ speed, m = 5,
+dots = FALSE, seed = 29, legend.pos = "topleft", printit = FALSE,
+main = "Small symbos are predicted values while bigger ones are actuals."))
+
+summary(cvResults)
+
+
+# Arima Modelling
+ts_data <- EuStockMarkets[, 1]
+opar <- par()
+
+par(mfrow = c(1, 2))
+
+decomposed_result <- decompose(ts_data, type = "mult")
+
+plot(decomposed_result)
+
+decomposed_result <- decompose(ts_data, type = "additive")
+plot(decomposed_result)
+
+seasonal_trend_error <- stl(ts_data, s.window = "periodic")
+par <- opar
+
+#Examine first few rows of time series
+seasonal_trend_error$time.series
+
+#lag 3 - 3 periods back
+lagged_ts <- lag(ts_data, 3)
+lagged_ts
+
+install.packages("DataCombine")
+library(DataCombine)
+
+my_dataframe <- as.data.frame(ts_data)
+
+#create lag1 variable
+my_dataframe <- slide(my_dataframe, "x", NewVar = "xLag1", slideBy = -1)
+
+#create lead 1 variable
+my_dataframe <- slide(my_dataframe, "x", NewVar = "xLead1", slideBy = 1)
+
+head(my_dataframe)
+
+# acf generates chart by default
+acf_res <- acf(AirPassengers)
+
+# partial autocorrelation
+pacf_res <- pacf(AirPassengers)
+
+
+# de-trend a time series
+
+plot(JohnsonJohnson)
+
+trained_model <- lm(JohnsonJohnson ~ c(1:length(JohnsonJohnson)))
+
+plot(resid(trained_model), type = "l")
+
+# De-compose the Time series using forecast::stl()
+install.packages("forecast")
+library(forecast)
+
+ts_decompose <- stl(AirPassengers, "periodic")
+
+ts_seasonal_adjust <- seasadj(ts_decompose)
+
+plot(AirPassengers, type = "l")
+
+plot(ts_seasonal_adjust, type = "l")
+
+
+seasonplot(ts_seasonal_adjust, 12, col = rainbow(12), year.labels = TRUE, main = "Seasonal plot: Airpassengers")
+
+
+# how do we test if a time series is stationary?
+library(tseries)
+
+adf.test(ts_data)
+
+kpss.test(ts_data)
+
+#Season Differencing
+nsdiffs(AirPassengers)
+
+# apply 1
+AirPassengers_seasdiff <- diff(AirPassengers, lag = frequency(AirPassengers), differences = 1)
+plot(AirPassengers_seasdiff, type = "l", main = "Seasonnally Differenced")
+
+# apply again
+nsdiffs(AirPassengers_seasdiff)
+
+AirPassengers_seasdiff2 <- diff(AirPassengers_seasdiff, lag = frequency(AirPassengers_seasdiff), differences = 1)
+plot(AirPassengers_seasdiff2, type = "l", main = "2 Seasonnally Differenced")
+
+
+#Nile dataset
+str(Nile)
+plot(Nile)
+ndiffs(Nile)
+
+d_nile <- diff(Nile)
+
+plot(d_nile)
+ndiffs(d_nile)
+
+adf.test(d_nile)
+
+Acf(d_nile)
+Pacf(d_nile)
+
+# Fit the ARIMA model
+fit <- Arima(Nile, order = c(0, 1, 1))
+fit
+
+accuracy(fit)
+
+qqnorm(fit$residuals)
+qqline(fit$residuals)
+
+Box.test(fit$residuals, type = "Ljung-Box")
+
+my_forecast <- forecast(fit, 3)
+
+plot(my_forecast)
+
+fit <- auto.arima(Nile)
+fit
+
+my_forecast <- forecast(fit, 3)
+
+plot(my_forecast)
